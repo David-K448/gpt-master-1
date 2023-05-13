@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>File Upload Success</title>
+    <title>File Upload Successful</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style2.css') }}">
 </head>
 <body>
     <h1>File Upload Success</h1>
@@ -15,7 +16,9 @@
         <source src="{{ url_for('uploaded_file', filename=file.filename) }}" type="audio/wav">
     </audio>
 
-    <button id="transcribe-btn">Click me!</button>
+    <button id="transcribe-btn">Transcribe Audio</button>
+
+    
 
 	<script>
 		document.getElementById('transcribe-btn').addEventListener('click', function() {

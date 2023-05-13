@@ -25,13 +25,25 @@ def index():
 
 @app.route('/upload', methods=['POST'])
 def upload():
-    file = request.files['file']
+    try:
+        file = request.files['file']
+    except KeyError:
+        flash("No file selected.")
+        return redirect('/')
+    
     MAX_FILESIZE = 25 * 1024 * 1024 # 25MB in bytes
     if file.content_length > MAX_FILESIZE:
         flash("File is too large. Max file size is 25MB.")
         return redirect('/')
+    
+    if file.filename == '':
+        flash('No selected file')
+        return redirect('/')
+        
     file.save(os.path.join(os.getcwd(), 'tmp', file.filename))
     return render_template('uploaded.html', file=file)
+
+
 
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
@@ -57,10 +69,13 @@ def button_click():
         return 'Button clicked successfully!', 200
     
 def op_api():
+    global transcriptionG
     with open(os.path.join(app.config['UPLOAD_FOLDER'], fileNameA), 'rb') as audio_file:
         transcript = openai.Audio.transcribe("whisper-1", audio_file)
         transcription_text = transcript.text
+        transcriptionG = transcription_text
         print(transcription_text)
+
 
 
 if __name__ == '__main__':
